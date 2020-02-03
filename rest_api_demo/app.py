@@ -4,6 +4,7 @@ from flask import Blueprint, Flask
 
 from rest_api_demo import settings
 from rest_api_demo.api.blog.endpoints.categories import ns as blog_categories_namespace
+from rest_api_demo.api.blog.endpoints.geonames import ns as geonames_namespace
 from rest_api_demo.api.blog.endpoints.posts import ns as blog_posts_namespace
 from rest_api_demo.api.restplus import api
 from rest_api_demo.database import db
@@ -35,6 +36,7 @@ def initialize_app():
     api.init_app(blueprint)
     api.add_namespace(blog_posts_namespace)
     api.add_namespace(blog_categories_namespace)
+    api.add_namespace(geonames_namespace)
     app.register_blueprint(blueprint)
     
     db.init_app(app)
@@ -43,6 +45,10 @@ def initialize_app():
 def main():
     configure_app()
     initialize_app()
+    
+    # with app.app_context():
+    #     reset_database()
+    #     seed_database()
     
     log.info(f'>>>>> Starting development server at http://{settings.FLASK_SERVER_NAME}{settings.url_prefix}/ <<<<<')
     app.run()
