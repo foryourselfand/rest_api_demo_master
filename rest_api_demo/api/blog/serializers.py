@@ -11,17 +11,6 @@ blog_post = api.model('Blog post', {
     'category':    fields.String(attribute = 'category.name'),
     })
 
-pagination = api.model('A page of results', {
-    'page':     fields.Integer(description = 'Number of this page of results'),
-    'pages':    fields.Integer(description = 'Total number of pages of results'),
-    'per_page': fields.Integer(description = 'Number of items per page of results'),
-    'total':    fields.Integer(description = 'Total number of results'),
-    })
-
-page_of_blog_posts = api.inherit('Page of blog posts', pagination, {
-    'items': fields.List(fields.Nested(blog_post))
-    })
-
 category = api.model('Blog category', {
     'id':   fields.Integer(readOnly = True, description = 'The unique identifier of a blog category'),
     'name': fields.String(description = 'Category name'),
@@ -79,4 +68,19 @@ geoname = api.model('GeoName', {
     'timezone':          fields.String(description = 'the iana timezone id (see file timeZone.txt) varchar(40)'),
     'modification date': fields.Date(attribute = 'modification_date',
                                      description = 'date of last modification in yyyy-MM-dd format')
+    })
+
+pagination = api.model('A page of results', {
+    'page':     fields.Integer(description = 'Number of this page of results'),
+    'pages':    fields.Integer(description = 'Total number of pages of results'),
+    'per_page': fields.Integer(description = 'Number of items per page of results'),
+    'total':    fields.Integer(description = 'Total number of results'),
+    })
+
+page_of_blog_posts = api.inherit('Page of blog posts', pagination, {
+    'items': fields.List(fields.Nested(blog_post))
+    })
+
+page_of_geonames = api.inherit('Page of geonames', pagination, {
+    'items': fields.List(fields.Nested(geoname))
     })
