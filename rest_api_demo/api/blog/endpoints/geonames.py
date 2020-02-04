@@ -1,6 +1,6 @@
 import logging
 
-from flask import request
+from flask import abort, request
 from flask_restplus import marshal, Resource
 
 from rest_api_demo.api.blog.parsers import comparison_arguments, pagination_arguments
@@ -14,10 +14,9 @@ ns = api.namespace('geonames', description = 'Operations related to GeoNames')
 
 
 @ns.route('/by_geonameid/<int:geonameid>')
-@api.response(404, 'GeoName not found.')
 class GeoNameId(Resource):
-    
     @api.marshal_with(geoname)
+    @api.response(404, 'GeoName not found.')
     def get(self, geonameid: int):
         """
         Returns a geoname by geonameid.
@@ -44,9 +43,9 @@ class GeoNamePage(Resource):
 
 
 @ns.route('/compare_two')
-@api.response(404, 'GeoName not found.')
 class GeoNameCompare(Resource):
     @api.expect(comparison_arguments)
+    @api.response(404, 'GeoName not found.')
     def get(self):
         args = comparison_arguments.parse_args(request)
         
@@ -55,6 +54,8 @@ class GeoNameCompare(Resource):
         
         geoname_first = self.get_geoname(city_first)
         geoname_second = self.get_geoname(city_second)
+        if not geoname_first or geoname_second:
+            abort(404, 'GeoName not found.')
         
         data = {'geoname_first':         geoname_first,
                 'geoname_second':        geoname_second,
