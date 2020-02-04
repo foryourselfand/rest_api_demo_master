@@ -7,7 +7,8 @@ from rest_api_demo.api.blog.endpoints.categories import ns as blog_categories_na
 from rest_api_demo.api.blog.endpoints.geonames import ns as geonames_namespace
 from rest_api_demo.api.blog.endpoints.posts import ns as blog_posts_namespace
 from rest_api_demo.api.restplus import api
-from rest_api_demo.database import db
+from rest_api_demo.database import db, reset_database
+from rest_api_demo.database.seeder import seed_database
 
 logging.config.fileConfig(settings.logging_conf_path)
 log = logging.getLogger(__name__)

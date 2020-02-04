@@ -29,14 +29,22 @@ class IntegerSafe(fields.Integer):
             return 0
 
 
+class StringWithoutLastComma(fields.String):
+    def format(self, value):
+        if value[-1] == ',':
+            return value[:-1]
+        else:
+            return value
+
+
 geoname = api.model('GeoName', {
     'geonameid':         fields.Integer(description = 'integer id of record in geonames database'),
     'name':              fields.String(description = 'name of geographical point (utf8) varchar(200)'),
     'asciiname':         fields.String(
             description = 'name of geographical point in plain ascii characters, varchar(200)'),
-    'alternatenames':    fields.String(description = 'alternatenames, comma separated, ascii names automatically '
-                                                     'transliterated, convenience attribute from alternatename table, '
-                                                     'varchar(10000)'),
+    'alternatenames':    StringWithoutLastComma(description = 'alternatenames, comma separated, ascii names'
+                                                              'automatically transliterated, convenience attribute '
+                                                              'from alternatename table, varchar(10000)'),
     'latitude':          fields.Float(description = 'latitude in decimal degrees (wgs84)'),
     'longitude':         fields.Float(description = 'longitude in decimal degrees (wgs84)'),
     'feature class':     fields.String(attribute = 'feature_class',
@@ -83,4 +91,12 @@ page_of_blog_posts = api.inherit('Page of blog posts', pagination, {
 
 page_of_geonames = api.inherit('Page of geonames', pagination, {
     'items': fields.List(fields.Nested(geoname))
+    })
+
+comparison = api.model('Comparison of two cities', {
+    'geoname_first':         fields.Nested(geoname, description = 'GeoName of the first city'),
+    'geoname_second':        fields.Nested(geoname, description = 'GeoName of the second city'),
+    'north':                 fields.String(description = 'Which of the two cities is located north'),
+    'is_timezone_different': fields.Boolean(),
+    'timezone_difference':   fields.Integer(description = 'In hours')
     })
