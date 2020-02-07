@@ -96,7 +96,7 @@ page_of_geonames = api.inherit('Page of geonames', pagination, {
 comparison = api.model('Comparison of two cities', {
     'geoname_first':         fields.Nested(geoname, description = 'GeoName of the first city'),
     'geoname_second':        fields.Nested(geoname, description = 'GeoName of the second city'),
-    'north':                 fields.String(description = 'Which of the two cities is located north'),
+    'north_city_name':       fields.String(description = 'Name of city which located north'),
     'is_timezone_different': fields.Boolean(),
     'timezone_difference':   fields.Integer(description = 'In hours')
     })

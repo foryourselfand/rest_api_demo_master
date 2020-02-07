@@ -3,10 +3,13 @@ import logging
 from flask import abort, request
 from flask_restplus import marshal, Resource
 
+from rest_api_demo.api.blog.business import Business
 from rest_api_demo.api.blog.parsers import comparison_arguments, pagination_arguments
 from rest_api_demo.api.blog.serializers import comparison, geoname, page_of_geonames
 from rest_api_demo.api.restplus import api
 from rest_api_demo.database.models import GeoName
+
+f
 
 log = logging.getLogger(__name__)
 
@@ -54,12 +57,15 @@ class GeoNameCompare(Resource):
         
         geoname_first = self.get_geoname(city_first)
         geoname_second = self.get_geoname(city_second)
-        if not geoname_first or geoname_second:
+        
+        if not geoname_first or not geoname_second:
             abort(404, 'GeoName not found.')
+        
+        north_city_name: str = Business.get_north_city_name(geoname_first, geoname_second)
         
         data = {'geoname_first':         geoname_first,
                 'geoname_second':        geoname_second,
-                'north':                 'temp north',
+                'north_city_name':       north_city_name,
                 'is_timezone_different': True,
                 'timezone_difference':   -1}
         return marshal(data, comparison)

@@ -1,5 +1,14 @@
 from rest_api_demo.database import db
-from rest_api_demo.database.models import Post, Category
+from rest_api_demo.database.models import Category, GeoName, Post
+
+
+class Business:
+    @staticmethod
+    def get_north_city_name(geoname_first: GeoName, geoname_second: GeoName) -> str:
+        if geoname_first.latitude > geoname_second.latitude:
+            return geoname_first.name
+        else:
+            return geoname_second.name
 
 
 def create_blog_post(data):
@@ -31,11 +40,11 @@ def delete_post(post_id):
 def create_category(data):
     name = data.get('name')
     category_id = data.get('id')
-
+    
     category = Category(name)
     if category_id:
         category.id = category_id
-
+    
     db.session.add(category)
     db.session.commit()
 
