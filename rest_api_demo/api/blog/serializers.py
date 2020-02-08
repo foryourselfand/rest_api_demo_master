@@ -98,6 +98,9 @@ comparison = api.model('Comparison of two GeoNames', {
     'geoname_first':         fields.Nested(geoname, description = 'GeoName of the first city'),
     'geoname_second':        fields.Nested(geoname, description = 'GeoName of the second city'),
     'north_city_name':       fields.String(description = 'Name of city which located north'),
+    'north_city_name_input': fields.String(description = 'Input name of city which located north (In Russian)'),
     'is_timezone_different': fields.Boolean(),
-    'timezone_difference':   fields.Integer(description = 'In hours')
+    'timezone_difference':   fields.Integer(
+            description = "In hours, Absolute value (whatever city first timezone different from city second timezone, "
+                          "or opposite - don't matter, so signs is unnecessary)")
     })

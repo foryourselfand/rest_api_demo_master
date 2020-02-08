@@ -99,10 +99,11 @@ class GeoName(db.Model):
 
 class Comparison:
     def __init__(self, geoname_first: GeoName, geoname_second: GeoName,
-                 north_city_name: str,
+                 north_city_name: str, north_city_name_input: str,
                  is_timezone_different: bool, timezone_difference: int):
         self.geoname_first = geoname_first
         self.geoname_second = geoname_second
         self.north_city_name = north_city_name
+        self.north_city_name_input = north_city_name_input
         self.is_timezone_different = is_timezone_different
         self.timezone_difference = timezone_difference

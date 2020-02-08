@@ -31,7 +31,7 @@ class GeoNamePaginated(Resource):
     @api.marshal_with(page_of_geonames)
     def get(self):
         """
-        Returns list of geonames.
+        Returns list of GeoNames.
         """
         args = pagination_arguments.parse_args(request)
         page: int = args.get('page', 1)
@@ -57,19 +57,15 @@ class GeoNameCompareTwoCities(Resource):
         city_first: str = args.get('city_first')
         city_second: str = args.get('city_second')
         
-        geoname_first: GeoName = self.get_geoname(city_first)
-        geoname_second: GeoName = self.get_geoname(city_second)
+        geoname_first: GeoName = Business.get_geoname_specified(city_first)
+        geoname_second: GeoName = Business.get_geoname_specified(city_second)
         
         north_city_name: str = Business.get_north_city_name(geoname_first, geoname_second)
+        north_city_name_input: str = Business.get_north_city_name_input(geoname_first, geoname_second,
+                                                                        city_first, city_second)
         timezone_difference: int = Business.get_timezone_difference(geoname_first, geoname_second)
         is_timezone_different: bool = Business.get_is_timezone_different(timezone_difference)
         
-        return Comparison(geoname_first, geoname_second, north_city_name, is_timezone_different, timezone_difference)
-    
-    def get_geoname(self, city_name: str) -> GeoName:
-        city_name_with_comma = f',{city_name},'
-        geoname_query = GeoName.query \
-            .filter(GeoName.feature_class == 'P') \
-            .filter(GeoName.alternatenames.contains(city_name_with_comma)). \
-            order_by(GeoName.population.desc())
-        return geoname_query.first_or_404()
+        return Comparison(geoname_first, geoname_second,
+                          north_city_name, north_city_name_input,
+                          is_timezone_different, timezone_difference)
