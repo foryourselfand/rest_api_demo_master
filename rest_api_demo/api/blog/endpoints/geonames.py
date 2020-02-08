@@ -20,7 +20,7 @@ class GeoNameById(Resource):
     @api.marshal_with(geoname)
     def get(self, geonameid: int):
         """
-        Returns a geoname by geonameid.
+        Returns a GeoName by geonameid.
         """
         return GeoName.query.filter(GeoName.geonameid == geonameid).one()
 
@@ -34,8 +34,8 @@ class GeoNamePaginated(Resource):
         Returns list of GeoNames.
         """
         args = pagination_arguments.parse_args(request)
-        page: int = args.get('page', 1)
-        per_page: int = args.get('per_page', 10)
+        page: int = args.get('page')
+        per_page: int = args.get('per_page')
         
         geoname_query = GeoName.query
         geoname_page = geoname_query.paginate(page, per_page, error_out = False)
@@ -50,7 +50,7 @@ class GeoNameCompareTwoCities(Resource):
     @api.marshal_with(comparison)
     def get(self):
         """
-        Temp description
+        Returns the result of comparing two cities
         """
         args = comparison_arguments.parse_args(request)
         
