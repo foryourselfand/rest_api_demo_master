@@ -39,7 +39,7 @@ class Category(db.Model):
         return '<Category %r>' % self.name
 
 
-class MyDate(db.TypeDecorator):
+class DateIso(db.TypeDecorator):
     impl = db.DateTime
     
     def process_bind_param(self, value, dialect):
@@ -71,7 +71,7 @@ class GeoName(db.Model):
     elevation = db.Column(db.Integer, nullable = False)
     dem = db.Column(db.Integer, nullable = False)
     timezone = db.Column(db.String(40), nullable = False)
-    modification_date = db.Column(MyDate, nullable = False)
+    modification_date = db.Column(DateIso, nullable = False)
     
     def __init__(self, geonameid, name, asciiname, alternatenames, latitude, longitude, feature_class, feature_code,
                  country_code_1, country_code_2, admin_code_1, admin_code_2, admin_code_3, admin_code_4, population,
@@ -95,3 +95,14 @@ class GeoName(db.Model):
         self.dem = dem
         self.timezone = timezone
         self.modification_date = modification_date
+
+
+class Comparison:
+    def __init__(self, geoname_first: GeoName, geoname_second: GeoName,
+                 north_city_name: str,
+                 is_timezone_different: bool, timezone_difference: int):
+        self.geoname_first = geoname_first
+        self.geoname_second = geoname_second
+        self.north_city_name = north_city_name
+        self.is_timezone_different = is_timezone_different
+        self.timezone_difference = timezone_difference

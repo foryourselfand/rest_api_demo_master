@@ -1,3 +1,7 @@
+import datetime
+
+import pytz
+
 from rest_api_demo.database import db
 from rest_api_demo.database.models import Category, GeoName, Post
 
@@ -9,6 +13,23 @@ class Business:
             return geoname_first.name
         else:
             return geoname_second.name
+    
+    @staticmethod
+    def get_timezone_difference(geoname_first: GeoName, geoname_second: GeoName) -> int:
+        timezone_first = pytz.timezone(geoname_first.timezone)
+        timezone_second = pytz.timezone(geoname_second.timezone)
+        
+        now = datetime.datetime.now()
+        localize_first = timezone_first.localize(now)
+        localize_second = timezone_second.localize(now)
+        
+        time_difference = abs(int((localize_second - localize_first).total_seconds() / 3600))
+        
+        return time_difference
+    
+    @staticmethod
+    def get_is_timezone_different(timezone_difference: int) -> bool:
+        return timezone_difference != 0
 
 
 def create_blog_post(data):

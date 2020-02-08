@@ -6,7 +6,7 @@ pagination_arguments.add_argument('per_page', type = int, required = False, choi
                                   default = 10, help = 'Results per page')
 
 comparison_arguments = reqparse.RequestParser()
-comparison_arguments.add_argument('city_first', type = str, required = True, default = 'Рождественский',
+comparison_arguments.add_argument('city_first', type = str, required = True, default = 'Санкт-Петербург',
                                   help = 'Name of the first city (in Russian)')
-comparison_arguments.add_argument('city_second', type = str, required = True, default = 'Заозёрск',
+comparison_arguments.add_argument('city_second', type = str, required = True, default = 'Владивосток',
                                   help = 'Name of the second city (in Russian)')

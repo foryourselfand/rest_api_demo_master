@@ -16,7 +16,7 @@ def main():
     print(f'{first_localize=}')
     print(f'{second_localize=}')
 
-    time_diff = int((first_localize - second_localize).total_seconds() / 3600)
+    time_diff = int((second_localize - first_localize).total_seconds() / 3600)
     print(f'{time_diff=}')
     
     
