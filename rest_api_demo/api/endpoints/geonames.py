@@ -3,10 +3,10 @@ import logging
 from flask import request
 from flask_restplus import Resource
 
-from rest_api_demo.api.blog.business import Business
-from rest_api_demo.api.blog.parsers import comparison_arguments, pagination_arguments
-from rest_api_demo.api.blog.serializers import comparison, geoname, page_of_geonames
+from rest_api_demo.api.business import Business
+from rest_api_demo.api.parsers import Parsers
 from rest_api_demo.api.restplus import api
+from rest_api_demo.api.serializers import Serializers
 from rest_api_demo.database.models import Comparison, GeoName
 
 log = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ ns = api.namespace('geonames/task_', description = 'Operations related to GeoNam
 @ns.route('1/by_geonameid/<int:geonameid>')
 class GeoNameById(Resource):
     @api.response(404, 'GeoName not found.')
-    @api.marshal_with(geoname)
+    @api.marshal_with(Serializers.geoname)
     def get(self, geonameid: int):
         """
         Returns a GeoName by geonameid.
@@ -27,13 +27,13 @@ class GeoNameById(Resource):
 
 @ns.route('2/paginated')
 class GeoNamePaginated(Resource):
-    @api.expect(pagination_arguments)
-    @api.marshal_with(page_of_geonames)
+    @api.expect(Parsers.pagination_arguments)
+    @api.marshal_with(Serializers.page_of_geonames)
     def get(self):
         """
         Returns list of GeoNames.
         """
-        args = pagination_arguments.parse_args(request)
+        args = Parsers.pagination_arguments.parse_args(request)
         page: int = args.get('page')
         per_page: int = args.get('per_page')
         
@@ -45,14 +45,14 @@ class GeoNamePaginated(Resource):
 
 @ns.route('3/compare_two_cities')
 class GeoNameCompareTwoCities(Resource):
-    @api.expect(comparison_arguments)
+    @api.expect(Parsers.comparison_arguments)
     @api.response(404, 'GeoName not found.')
-    @api.marshal_with(comparison)
+    @api.marshal_with(Serializers.comparison)
     def get(self):
         """
         Returns the result of comparing two cities
         """
-        args = comparison_arguments.parse_args(request)
+        args = Parsers.comparison_arguments.parse_args(request)
         
         city_first: str = args.get('city_first')
         city_second: str = args.get('city_second')
