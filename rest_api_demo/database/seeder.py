@@ -7,9 +7,9 @@ def seed_database():
         for line in file.read().splitlines():
             line_split = line.split('\t')
             
-            alternames = line_split[3]
-            alternames_with_commas = f',{alternames},'
-            line_split[3] = alternames_with_commas
+            alternatenames = line_split[3]
+            alternatenames_with_commas = f',{alternatenames},'
+            line_split[3] = alternatenames_with_commas
             
             geoname = GeoName(*line_split)
             db.session.add(geoname)

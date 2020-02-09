@@ -88,3 +88,8 @@ class Serializers:
                               "timezone, "
                               "or opposite - don't matter, so signs is unnecessary)")
         })
+    
+    hints = api.model('Hint with possible city name variants', {
+        'founded':     fields.Boolean(description = 'Is exact match was founded'),
+        'suggestions': fields.List(fields.String())
+        })

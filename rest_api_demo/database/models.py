@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Set, List
 
 from rest_api_demo.database import db
 
@@ -71,3 +72,9 @@ class Comparison:
         self.north_city_name_input = north_city_name_input
         self.is_timezone_different = is_timezone_different
         self.timezone_difference = timezone_difference
+
+
+class Hints:
+    def __init__(self, founded: bool, suggestions: Set[str]):
+        self.founded: bool = founded
+        self.suggestions: List[str] = list(suggestions)

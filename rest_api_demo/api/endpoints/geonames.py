@@ -1,4 +1,5 @@
 import logging
+from typing import Set
 
 from flask import request
 from flask_restplus import Resource
@@ -7,7 +8,7 @@ from rest_api_demo.api.business import Business
 from rest_api_demo.api.parsers import Parsers
 from rest_api_demo.api.restplus import api
 from rest_api_demo.api.serializers import Serializers
-from rest_api_demo.database.models import Comparison, GeoName
+from rest_api_demo.database.models import Comparison, GeoName, Hints
 
 log = logging.getLogger(__name__)
 
@@ -31,7 +32,7 @@ class GeoNamePaginated(Resource):
     @api.marshal_with(Serializers.page_of_geonames)
     def get(self):
         """
-        Returns list of GeoNames.
+        Returns paginated list of GeoNames.
         """
         args = Parsers.pagination_arguments.parse_args(request)
         page: int = args.get('page')
@@ -57,15 +58,34 @@ class GeoNameCompareTwoCities(Resource):
         city_first: str = args.get('city_first')
         city_second: str = args.get('city_second')
         
-        geoname_first: GeoName = Business.get_geoname_specified(city_first)
-        geoname_second: GeoName = Business.get_geoname_specified(city_second)
+        geoname_first: GeoName = Business.get_geonames_matched_full(city_first).first_or_404()
+        geoname_second: GeoName = Business.get_geonames_matched_full(city_second).first_or_404()
         
         north_city_name: str = Business.get_north_city_name(geoname_first, geoname_second)
         north_city_name_input: str = Business.get_north_city_name_input(geoname_first, geoname_second,
                                                                         city_first, city_second)
+        
         timezone_difference: int = Business.get_timezone_difference(geoname_first, geoname_second)
         is_timezone_different: bool = Business.get_is_timezone_different(timezone_difference)
         
         return Comparison(geoname_first, geoname_second,
                           north_city_name, north_city_name_input,
                           is_timezone_different, timezone_difference)
+
+
+@ns.route('42/hints/<string:city_name>')
+class GeoNameHints(Resource):
+    @api.marshal_with(Serializers.hints)
+    def get(self, city_name: str):
+        """
+        Returns hint with possible city name variants
+        """
+        geonames_matched_full = Business.get_geonames_matched_full(city_name)
+        
+        founded: bool = geonames_matched_full.count() != 0
+        
+        geonames_matched_part = Business.get_geonames_matched_part(city_name)
+        
+        suggestions: Set[str] = Business.get_suggestions(geonames_matched_part, city_name)
+        
+        return Hints(founded, suggestions)
