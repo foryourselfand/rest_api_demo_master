@@ -3,3 +3,4 @@ flask-restplus
 Flask-SQLAlchemy
 sqlalchemy
 pytz
+Werkzeug==0.16.1
