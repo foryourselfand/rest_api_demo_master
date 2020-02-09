@@ -91,5 +91,6 @@ class Serializers:
     
     hints = api.model('Hint with possible city name variants', {
         'founded':     fields.Boolean(description = 'Is exact match was founded'),
+        'total':       fields.Integer(description = 'Total number of suggestions'),
         'suggestions': fields.List(fields.String())
         })

@@ -13,9 +13,9 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///geoname.sqlite'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # Logging settings
-from rest_api_demo.utils import helper
+from rest_api_demo.utils.helper import Helper
 
-logging_conf_path = f'{helper.get_project_root()}/logging.conf'
+logging_conf_path = f'{Helper.get_project_root()}/logging.conf'
 
 # Other
 url_prefix = '/internship'

@@ -38,16 +38,18 @@ def initialize_app():
     db.init_app(app)
 
 
-def main():
+def run_app():
     configure_app()
     initialize_app()
     
-    # with app.app_context():
-    #     reset_database()
-    #     seed_database()
+    # Seeder.set_up(app)
     
     log.info(f'>>>>> Starting development server at http://{settings.FLASK_SERVER_NAME}{settings.url_prefix}/ <<<<<')
     app.run()
+
+
+def main():
+    run_app()
 
 
 if __name__ == "__main__":

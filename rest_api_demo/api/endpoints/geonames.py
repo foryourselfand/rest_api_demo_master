@@ -87,5 +87,6 @@ class GeoNameHints(Resource):
         geonames_matched_part = Business.get_geonames_matched_part(city_name)
         
         suggestions: Set[str] = Business.get_suggestions(geonames_matched_part, city_name)
+        geonames_matched_part_total: int = len(suggestions)
         
-        return Hints(founded, suggestions)
+        return Hints(founded, geonames_matched_part_total, suggestions)
