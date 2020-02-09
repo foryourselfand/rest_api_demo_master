@@ -1,7 +1,6 @@
-rest_api_demo
-=============
+Infotecs internship
+-
+Описание методов (формат входных данных, возвращаемая модель) находится на странице, генерируемой Swagger UI
+![methods description_1](res/methods_description_1.png)
 
-This repository contains boilerplate code for a RESTful API based on Flask and Flask-RESTPlus.
-
-The code of this demo app is described in an article on my blog:
-http://michal.karzynski.pl/blog/2016/06/19/building-beautiful-restful-apis-using-flask-swagger-ui-flask-restplus/
+![methods description_2](res/methods_description_2.png)
