@@ -8,15 +8,15 @@ from src import settings
 
 log = logging.getLogger(__name__)
 
-api = Api(version = '1.0',
-          title = 'Infotecs Internship',
-          description = 'Solution of the test task on Python')
+api = Api(version='1.0',
+          title='Infotecs Internship',
+          description='Solution of the test task on Python')
 
 
 @api.errorhandler
 def default_error_handler(e):
     log.exception(traceback.format_exc())
-    
+
     if not settings.FLASK_DEBUG:
         return {'message': 'An unhandled exception occurred.'}, 500
 

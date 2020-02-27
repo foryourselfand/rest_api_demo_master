@@ -12,7 +12,7 @@ from src.database.models import Comparison, GeoName, Hints
 
 log = logging.getLogger(__name__)
 
-ns = api.namespace('geonames/task_', description = 'Operations related to GeoNames')
+ns = api.namespace('geonames/task_', description='Operations related to GeoNames')
 
 
 @ns.route('1/by_geonameid/<int:geonameid>')
@@ -37,10 +37,10 @@ class GeoNamePaginated(Resource):
         args = Parsers.pagination_arguments.parse_args(request)
         page: int = args.get('page')
         per_page: int = args.get('per_page')
-        
+
         geoname_query = GeoName.query
-        geoname_page = geoname_query.paginate(page, per_page, error_out = False)
-        
+        geoname_page = geoname_query.paginate(page, per_page, error_out=False)
+
         return geoname_page
 
 
@@ -54,20 +54,20 @@ class GeoNameCompareTwoCities(Resource):
         Returns the result of comparing two cities
         """
         args = Parsers.comparison_arguments.parse_args(request)
-        
+
         city_first: str = args.get('city_first')
         city_second: str = args.get('city_second')
-        
+
         geoname_first: GeoName = Business.get_geonames_matched_full(city_first).first_or_404()
         geoname_second: GeoName = Business.get_geonames_matched_full(city_second).first_or_404()
-        
+
         north_city_name: str = Business.get_north_city_name(geoname_first, geoname_second)
         north_city_name_input: str = Business.get_north_city_name_input(geoname_first, geoname_second,
                                                                         city_first, city_second)
-        
+
         timezone_difference: int = Business.get_timezone_difference(geoname_first, geoname_second)
         is_timezone_different: bool = Business.get_is_timezone_different(timezone_difference)
-        
+
         return Comparison(geoname_first, geoname_second,
                           north_city_name, north_city_name_input,
                           is_timezone_different, timezone_difference)
@@ -81,12 +81,12 @@ class GeoNameHints(Resource):
         Returns hint with possible city name variants
         """
         geonames_matched_full = Business.get_geonames_matched_full(city_name)
-        
+
         founded: bool = geonames_matched_full.count() != 0
-        
+
         geonames_matched_part = Business.get_geonames_matched_part(city_name)
-        
+
         suggestions: Set[str] = Business.get_suggestions(geonames_matched_part, city_name)
         geonames_matched_part_total: int = len(suggestions)
-        
+
         return Hints(founded, geonames_matched_part_total, suggestions)
